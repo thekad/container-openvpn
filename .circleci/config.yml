@@ -1,5 +1,5 @@
 ---
-version: 2
+version: 2.1
 workflows:
   build:
     jobs:
@@ -38,18 +38,13 @@ jobs:
           key: v1-{{ .Branch }}-{{ epoch }}
           paths:
             - /caches/app.tar
-      - deploy_docker:
-          name: Push application to Docker registry
+      - deploy:
+          name: Push application to registries
           command: |
             if [ "${CIRCLE_BRANCH}" == "main" ]; then
               docker login -u "${DOCKERHUB_USER}" -p "${DOCKERHUB_TOKEN}"
               docker tag app "docker.io/thekad/openvpn:latest"
               docker push "docker.io/thekad/openvpn:latest"
-            fi
-      - deploy_quay:
-          name: Push application to Quay registry
-          command: |
-            if [ "${CIRCLE_BRANCH}" == "main" ]; then
               docker login -u "${QUAY_USER}" -p "${QUAY_TOKEN}"
               docker tag app "quay.io/thekad/openvpn:latest"
               docker push "quay.io/thekad/openvpn:latest"
