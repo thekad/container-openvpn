@@ -1,5 +1,5 @@
 ---
-version: '2.1'
+version: 2.1
 orbs:
   docker: circleci/docker@2.1.2
 workflows:
@@ -12,6 +12,4 @@ workflows:
           readme: README.adoc
           image: docker.io/thekad/openvpn
           tag: latest
-          docker-login: ${DOCKERHUB_USER}
-          docker-password: ${DOCKERHUB_TOKEN}
 ...
