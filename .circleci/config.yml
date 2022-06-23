@@ -10,6 +10,6 @@ workflows:
             - docker
           dockerfile: Containerfile
           readme: README.adoc
-          image: docker.io/thekad/openvpn
+          image: thekad/openvpn
           tag: latest
 ...
