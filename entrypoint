@@ -1,0 +1,19 @@
+#!/bin/sh -e
+
+echo -n "" > /etc/openvpn/auth.conf
+
+if [ "x$OVPN_USER" != "x" ]; then
+    echo "$OVPN_USER" > /etc/openvpn/auth.txt
+    if [ "x$OVPN_PASS" != "x" ]; then
+        echo "$OVPN_PASS" >> /etc/openvpn/auth.txt
+        AUTH_OPT="--auth-user-pass /etc/openvpn/auth.txt"
+    fi
+fi
+
+/usr/sbin/openvpn \
+    --config /etc/openvpn/clients/*.ovpn \
+    --script-security 2 \
+    $AUTH_OPT \
+    --auth-nocache \
+    --up /usr/local/sbin/ovpn-up
+    --down /etc/openvpn/down.sh

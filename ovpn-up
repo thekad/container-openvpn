@@ -1,0 +1,5 @@
+#!/bin/sh -e
+
+/etc/openvpn/up.sh $@
+
+/usr/sbin/sockd -f /etc/sockd.conf -D

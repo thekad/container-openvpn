@@ -1,0 +1,59 @@
+= OpenVPN Container
+
+If you have ever wondered how to run a VPN session for a single application
+(e.g. your browser) then this is what you've been looking for.
+
+This container image will connect to your given OpenVPN profile and then spawn
+up a SOCKS5 proxy exposed to your host, which you can then connect to.
+
+
+== Running
+
+You have to mount your profile configuration inside the container in
+`/etc/openvpn/clients/` and the profile file needs to have the extension
+`.ovpn`, you can mount more things to that location if you need to.
+
+There's 2 ways to run, in both examples we're exposing the SOCKS5 port as 9050.
+Also in both cases we have to:
+
+1. Give access to the `/dev/net/tun` devices and
+2. Add the `NET_ADMIN` container capability
+
+Otherwise the OpenVPN connection will refuse to start.
+
+=== Interactive authentication
+
+```bash
+docker run -it \
+    --name=openvpn \
+    --device=/dev/net/tun \
+    --cap-add=NET_ADMIN \
+    --volume /path/to/your/client.ovpn:/etc/openvpn/clients/client.ovpn:ro \
+    --publish localhost:9050:1080 \
+    thekad/openvpn:latest
+```
+
+The keep in mind that passing `-it` to the run call is important, otherwise the
+`openvpn` binary will comply about no standard input
+
+
+=== Passing user and password in environment
+
+NOTE: Don't do this if you don't trust the system where the container will run,
+of course.
+
+```bash
+docker run \
+    --name=openvpn \
+    --device=/dev/net/tun \
+    --cap-add=NET_ADMIN \
+    --volume /path/to/your/client.ovpn:/etc/openvpn/clients/client.ovpn:ro \
+    --publish localhost:9050:1080 \
+    --env OVPN_USER=user \
+    --env OVPN_PASS=secret \
+    thekad/openvpn:latest
+```
+
+Here you don't *need* to add interactive shell session to the run call. The
+passed user and password will be written to an auth file and passed over to the
+`openvpn` command.
