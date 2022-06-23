@@ -3,7 +3,7 @@ version: 2.1
 orbs:
   docker: circleci/docker@2.1.2
 workflows:
-  build-docker-image-only:
+  build-and-push:
     jobs:
       - docker/publish:
           context:
@@ -12,4 +12,12 @@ workflows:
           readme: README.adoc
           image: thekad/openvpn
           tag: latest
+      - docker/publish:
+          context:
+            - quay
+          dockerfile: Containerfile
+          readme: README.adoc
+          image: thekad/openvpn
+          tag: latest
+          registry: quay.io
 ...
