@@ -1,7 +1,5 @@
 #!/bin/sh -e
 
-echo -n "" > /etc/openvpn/auth.conf
-
 if [ "x$OVPN_USER" != "x" ]; then
     echo "$OVPN_USER" > /etc/openvpn/auth.txt
     if [ "x$OVPN_PASS" != "x" ]; then
